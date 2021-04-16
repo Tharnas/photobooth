@@ -3,6 +3,7 @@
 QWidget {
     background-color: transparent;
     color: #eeeeee;
+    /*font-family: Selima, sans-serif;*/
     font-family: AmaticSC, sans-serif;
     font-size: 50px;
 }
@@ -30,7 +31,7 @@ QPushButton:pressed {
 /* Idle Screen */
 
 QFrame#IdleMessage {
-    background-image: url(photobooth/gui/Qt5Gui/images/arrow-1024x600.png);
+    background-image: url(photobooth/gui/Qt5Gui/images/arrow-button-1024x600.png);
     background-repeat: no-repeat;
     padding: 80px 400px 120px 80px;
 }
@@ -42,13 +43,14 @@ QFrame#IdleMessage QLabel {
 
 QFrame#IdleMessage QPushButton {
     border: none;
-    color: rgba(255, 27, 0, 200);
+    color: rgba(255, 102, 106, 200);
+    /* color: rgba(255, 27, 0, 200); */
     font-size: 200px;
     text-align: center;
 }
 
 QFrame#IdleMessage QPushButton:pressed {
-    background-color: rgba(255, 27, 0, 200);
+    background-color: rgba(255, 102, 106, 200);
     color: #eeeeee;
 }
 

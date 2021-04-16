@@ -43,6 +43,7 @@ class CameraPicamera(CameraInterface):
         self.setActive()
         self._preview_resolution = (self._cap.resolution[0] // 2,
                                     self._cap.resolution[1] // 2)
+
         self.setIdle()
 
     def setActive(self):
@@ -60,6 +61,7 @@ class CameraPicamera(CameraInterface):
 
         self.setActive()
         stream = io.BytesIO()
+        self._cap.resolution = self._preview_resolution 
         self._cap.capture(stream, format='jpeg', use_video_port=True,
                           resize=self._preview_resolution)
         stream.seek(0)
@@ -69,6 +71,7 @@ class CameraPicamera(CameraInterface):
 
         self.setActive()
         stream = io.BytesIO()
-        self._cap.capture(stream, format='jpeg', resize=None)
+        self._cap.resolution = (4056,3040)
+        self._cap.capture(stream, format='jpeg', use_video_port=False, resize=(4056,3040))
         stream.seek(0)
         return Image.open(stream)

@@ -19,7 +19,7 @@
 
 import logging
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageDraw
 from io import BytesIO
 
 from .PictureDimensions import PictureDimensions
@@ -75,7 +75,7 @@ class Camera:
         if len(background) > 0:
             logging.info('Using background "{}"'.format(background))
             bg_picture = Image.open(background)
-            self._template = bg_picture.resize(self._pic_dims.outputSize)
+            self._template = bg_picture.resize(self._pic_dims.outputSize, Image.ANTIALIAS)
         else:
             self._template = Image.new('RGB', self._pic_dims.outputSize,
                                        (255, 255, 255))
@@ -147,6 +147,7 @@ class Camera:
         byte_data = BytesIO()
         picture.save(byte_data, format='jpeg')
         self._pictures.append(byte_data)
+        self.setIdle()
         self.setActive()
 
         if self._is_keep_pictures:
@@ -165,13 +166,20 @@ class Camera:
         self.setIdle()
 
         picture = self._template.copy()
+        draw = ImageDraw.Draw(picture)
         for i in range(self._pic_dims.totalNumPictures):
+            background = [self._pic_dims.thumbnailOffset[i][0] - 20, self._pic_dims.thumbnailOffset[i][1] - 20,
+                           self._pic_dims.thumbnailOffset[i][0] + self._pic_dims.thumbnailSize[0] + 20, self._pic_dims.thumbnailOffset[i][1] + self._pic_dims.thumbnailSize[1] + 20]
+
+            # draw.rectangle(background, fill="#ffffff")
+            draw.rectangle(background, fill="#C0C0C0")
+
             shot = Image.open(self._pictures[i])
-            resized = shot.resize(self._pic_dims.thumbnailSize)
+            resized = shot.resize(self._pic_dims.thumbnailSize, Image.ANTIALIAS)
             picture.paste(resized, self._pic_dims.thumbnailOffset[i])
 
         byte_data = BytesIO()
-        picture.save(byte_data, format='jpeg')
+        picture.save(byte_data, format='jpeg', quality=100)
         self._comm.send(Workers.MASTER,
                         StateMachine.CameraEvent('review', byte_data))
         self._pictures = []

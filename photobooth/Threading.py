@@ -45,8 +45,11 @@ class Communicator:
 
         if not isinstance(worker, Workers):
             raise TypeError('worker must be a member of Workers')
-
-        return self._queues[worker].get(block)
+        
+        if self._queues[worker].empty():
+            return None
+        else:
+            return self._queues[worker].get(block)
 
     def iter(self, worker):
 
@@ -70,3 +73,4 @@ class Workers(IntEnum):
     CAMERA = 2
     GPIO = 3
     WORKER = 4
+    REMOTEBUTTON = 5
